@@ -381,3 +381,138 @@ Levels: 4 6 8
 #绘图
 ```
 
+ifelse（）函数
+
+```r
+> attach(mtcars)
+The following objects are masked _by_ .GlobalEnv:
+
+    cyl, gear
+
+> newwhp<-ifelse(hp>100,"blue","red")
+> newwhp
+ [1] "blue" "blue" "red"  "blue" "blue" "blue" "blue" "red"  "red" 
+[10] "blue" "blue" "blue" "blue" "blue" "blue" "blue" "blue" "red" 
+[19] "red"  "red"  "red"  "blue" "blue" "blue" "blue" "red"  "red" 
+[28] "blue" "blue" "blue" "blue" "blue"
+> plot(wt,mpg,col=newwhp,pch=16,main = "Mile")
+```
+
+![1603087896986](1603087896986.png)
+
+#### 处理数据点重叠性问题
+
+刚样本数据太多的时候，数据绘图就会发生重叠
+
+```r
+> set.seed(100)
+> x<-rnorm(500,0,1)
+> m<-rnorm(500,0,1)
+> m<-rnorm(500,2,3)
+> n<-rnorm(500,1,1)
+> y1<-2*x+m
+> y2<-x-n
+> Y<-c(y1,y2)
+> X<-c(x,x)
+> Z<-as.data.frame(cbind(X,Y))
+> with(Z,plot(X,Y))
+```
+
+![1603088279630](1603088279630.png)
+
+![1603088293121](1603088293121.png)
+
+cbind组合成1000*2
+
+![1603088329758](1603088329758.png)
+
+不同颜色解决重叠问题
+
+```r
+> Z$colors<-ifelse(as.numeric(rownames(Z)) <= 500,"red","blue")
+> with(Z,plot(X,Y,col=colors))
+```
+
+![1603088606753](1603088606753.png)
+
+#### pie()函数绘制饼图
+
+![1603089198238](1603089198238.png)
+
+```r
+> pie(c(10,20,30,40),col = rainbow(4),labels = c("10%","20%","30%","40%"),main="PIE")
+```
+
+![1603088850563](1603088850563.png)
+
+#### 		barplot()函数绘制柱状图
+
+​	![1603090651142](1603090651142.png)
+
+![1603091515900](1603091515900.png)
+
+对向量绘制
+
+```r
+> first<-c(0.6,0.15,0.3)
+> 
+> income<-c("wage","property","others")
+> par(mfrow=c(2,2))
+> barplot(first,main="Default")
+> barplot(first,names.arg=income,density = 10,angle = 30,main="Default")
+> barplot(first,horiz = TRUE,main="Default")
+> x<-barplot(first,col=c("red","green","blue"),ylim = c(0,0.8),main = "colors&value")
+> x
+     [,1]
+[1,]  0.7
+[2,]  1.9
+[3,]  3.1
+> text(x,first+0.1,labels = as.character(first))
+在最后一个图上面添加文字，+0.1是在上面添加
+```
+
+![1603091451007](1603091451007.png)
+
+对矩阵作图
+
+#### hist()函数绘制直方图
+
+![1603092096570](1603092096570.png)
+
+![1603092170977](1603092170977.png)
+
+```r
+> attach(USArrests)
+> hist(Murder)
+> str(hist(Murder))
+List of 6
+ $ breaks  : num [1:10] 0 2 4 6 8 10 12 14 16 18
+ $ counts  : int [1:9] 1 12 8 7 7 4 6 3 2
+ $ density : num [1:9] 0.01 0.12 0.08 0.07 0.07 0.04 0.06 0.03 0.02
+ $ mids    : num [1:9] 1 3 5 7 9 11 13 15 17
+ $ xname   : chr "Murder"
+ $ equidist: logi TRUE
+ - attr(*, "class")= chr "histogram"
+> hist(Murder,freq = FALSE,labels = TRUE,ylim = c(0,0.15),xlim=c(0,20),xaxt="n",density = 8,angle = 60)
+> axis(1,seq(0,20,by=2)) 图形下面绘制线
+> density(USArrests$Murder)
+
+Call:
+	density.default(x = USArrests$Murder)
+
+Data: USArrests$Murder (50 obs.);	Bandwidth 'bw' = 1.793
+
+       x                y            
+ Min.   :-4.578   Min.   :5.639e-05  
+ 1st Qu.: 2.261   1st Qu.:5.526e-03  
+ Median : 9.100   Median :3.592e-02  
+ Mean   : 9.100   Mean   :3.652e-02  
+ 3rd Qu.:15.939   3rd Qu.:6.364e-02  
+ Max.   :22.778   Max.   :7.908e-02  
+```
+
+![1603092749910](1603092749910.png)
+
+#### bosplot()函数绘制箱线图
+
+![1603092950212](1603092950212.png)
