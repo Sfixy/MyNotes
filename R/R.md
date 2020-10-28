@@ -516,3 +516,144 @@ Data: USArrests$Murder (50 obs.);	Bandwidth 'bw' = 1.793
 #### bosplot()函数绘制箱线图
 
 ![1603092950212](1603092950212.png)
+
+```r
+> boxplot(mtcars$mpg,ylab="mpg",main="Motor")
+> summary(mtcars$mpg)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  10.40   15.43   19.20   20.09   22.80   33.90 
+```
+
+![1603347140088](1603347140088.png)
+
+虚线即触须
+
+```r
+boxplot(mtcars$mpg~mtcars$cyl,xlab = "cyl",ylab="mpg",main="Motor")
+```
+
+![1603347382912](1603347382912.png)
+
+8气缸存在异常值，空心圆点
+
+![1603347480113](1603347480113.png)
+
+### 绘图进阶-绘制三维信息模型
+
+#### contour()函数绘制等高线图
+
+![1603348894019](1603348894019.png)
+
+![1603348909933](1603348909933.png)
+
+```r
+> contour(volcano,nlevels=8,method = "flattest",lwd = 2,labcex = 0.8,vfont = c("sans serif","italic"),col="blue")
+```
+
+![1603348072609](1603348072609.png)
+
+#### plot3d()函数绘制三维散点图
+
+```r
+install.packages("rgl")
+```
+
+如果下载包出错，更改为国内镜像解决
+
+```r
+> library(rgl)
+Warning message:
+程辑包‘rgl’是用R版本4.0.3 来建造的 
+> attach(mtcars)
+The following objects are masked _by_ .GlobalEnv:
+
+    cyl, gear
+
+> plot3d(wt,hp,mpg,type="s",size = 1.5,col = "blue")
+> detach(mtcars)
+```
+
+可动的三维图形
+
+![1603350017410](1603350017410.png)
+
+#### symbols()函数绘制气泡图和温度计图
+
+二维平面反应三维信息
+
+![1603350435152](1603350435152.png)
+
+![1603350447847](1603350447847.png)
+
+![1603350470152](1603350470152.png)
+
+```r
+> attach(mtcars)
+The following objects are masked _by_ .GlobalEnv:
+
+    cyl, gear
+
+> symbols(wt,hp,circles = mpg,inches = 0.3,fg="white",bg="lightgrey",xlab = "weight",ylab="Gross")
+> text(wt,hp,rownames(mtcars),cex)
+Error in text.default(wt, hp, rownames(mtcars), cex) : 找不到对象'cex'
+> text(wt,hp,rownames(mtcars),cex=0.6)
+> detach(mtcars)
+```
+
+![1603350749161](1603350749161.png)
+
+```r
+> n <- mtcars[mtcars$gear==5,]
+> symbols(n$wt,n$hp,thermometers = cbind(0.5,1,n$mpg/50),inches = 0.8,xlab="Weight(lb/1000)",ylab = "Gross horsepower")
+> n$mpg
+[1] 26.0 30.4 15.8 19.7 15.0
+> text(n$wt,n$hp+15,rownames(n),cex = 1)
+> detach(mtcars)
+```
+
+**n$mpg大小在10到30，除以50保持在0到1之间**
+
+![1603351145911](1603351145911.png)
+
+#### persp()函数绘制3D表面图
+
+![1603351307216](1603351307216.png)
+
+![1603351316919](1603351316919.png)
+
+![1603351331563](1603351331563.png)
+
+```r
+> str(volcano)
+ num [1:87, 1:61] 100 101 102 103 104 105 105 106 107 108 ...
+> x<-seq(0,1,length = 87)生成等距离的点
+> y<-seq(0,1,length=61)
+> persp(x,y,volcano,theta = 30,phi=30,expand = 0.5)
+```
+
+![1603351507876](1603351507876.png)
+
+#### image()函数绘制三维图形
+
+![1603351640008](1603351640008.png)
+
+![1603351660636](1603351660636.png)
+
+灰度图
+
+```r
+> x<-seq(0,1,length = 87)
+> y<-seq(0,1,length=61)
+> image(x,y,volcano,col = gray((20:50)/50))
+```
+
+![1603351788776](1603351788776.png)
+
+在灰度图上添加等高线
+
+```r
+> contour(x,y,volcano,levels = seq(90,200,by=5),add=TRUE,col="red")
+```
+
+![1603351905913](1603351905913.png)
+
