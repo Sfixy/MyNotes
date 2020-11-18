@@ -342,3 +342,324 @@ WriteResult({ "nInserted" : 1 })
 
 ## MongoDB删除文档
 
+语法：
+
+```mongodb
+db.collection.remove(
+	<qurey>,
+	<justone>
+)
+
+2.5之后
+db.collection.remove(
+   <query>,
+   {
+     justOne: <boolean>,
+     writeConcern: <document>
+   }
+)
+```
+
+```mongodb
+> db.col.find()
+{ "_id" : ObjectId("5fb4bbb0861868f75fa09362"), "title" : "MongoDB教程", "description" : "MongoDB是一个Nosql数据库
+", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "monogdb", "database", "NoSql" ], "likes" : 100
+}
+{ "_id" : ObjectId("5fb4bbb6861868f75fa09363"), "title" : "MongoDB教程", "description" : "MongoDB是一个Nosql数据库
+", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "monogdb", "database", "NoSql" ], "likes" : 100
+}
+> db.col.remove({'title':'MongoDB教程'})
+WriteResult({ "nRemoved" : 2 }) //删除两条记录
+> db.col.find()                       
+```
+
+justOne设为1,删除一条找到记录
+
+```monogdb
+db.COLLECTION_NAME.remove(DELETION_CRITERIA,1)
+```
+
+清空 数据：
+
+```mongodb
+>db.col.remove({})
+>db.col.find()
+```
+
+**remove（）函数不会清空磁盘空间，需要进行如下操作回收磁盘空间**
+
+```mongodb
+db.repairDatabase()
+```
+
+**目前采用deleteOne()和deleteMany()删除并释放空间**
+
+```mongodb
+> db.col.deleteMany({title:'MongoDB'})  # 删除所有title为MongoDB的文档
+{ "acknowledged" : true, "deletedCount" : 1 }
+> db.col.find()
+{ "_id" : ObjectId("5fb4bf0c861868f75fa09364"), "title" : "MongoDB教程", "description" : "MongoDB是一个Nosql数据库
+", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "monogdb", "database", "NoSql" ], "likes" : 100
+}
+{ "_id" : ObjectId("5fb4bf0e861868f75fa09365"), "title" : "MongoDB教程", "description" : "MongoDB是一个Nosql数据库
+", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "monogdb", "database", "NoSql" ], "likes" : 100
+}
+{ "_id" : ObjectId("5fb4bf2c861868f75fa09366"), "title" : "MongoDB教程", "description" : "MongoDB是一个Nosql数据库
+", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "monogdb", "database", "NoSql" ], "likes" : 100
+}
+
+
+> db.col.delectMany({})  # 删除所有文档
+uncaught exception: TypeError: db.col.delectMany is not a function :
+@(shell):1:1
+> db.col.deleteMany({})
+{ "acknowledged" : true, "deletedCount" : 3 }
+> db.col.find()
+```
+
+## MonogoDB查询文档
+
+find()方法查询文档，非结构化的方式显示
+
+语法：
+
+```mongodb
+db.collection.find(query,projection)
+
+db.collection.find().pretty() //格式化显示文档
+```
+
+```mongodb
+> db.col.find().pretty()                             
+                                                     
+ )      "_id" : ObjectId("5fb4c0f5861868f75fa09368"),
+        "title" : "MongoDB教程",                       
+        "description" : "MongoDB是一个Nosql数据库",        
+        "by" : "菜鸟教程",                               
+        "url" : "http://www.runoob.com",             
+        "tags" : [                                   
+                "monogdb",                           
+                "database",                          
+                "NoSql"                              
+        ],                                           
+        "likes" : 100                                
+}                                                    
+```
+
+| 操作       | 格式                     | 范例                                        | RDBMS中的类似语句       |
+| :--------- | :----------------------- | :------------------------------------------ | :---------------------- |
+| 等于       | `{<key>:<value>`}        | `db.col.find({"by":"菜鸟教程"}).pretty()`   | `where by = '菜鸟教程'` |
+| 小于       | `{<key>:{$lt:<value>}}`  | `db.col.find({"likes":{$lt:50}}).pretty()`  | `where likes < 50`      |
+| 小于或等于 | `{<key>:{$lte:<value>}}` | `db.col.find({"likes":{$lte:50}}).pretty()` | `where likes <= 50`     |
+| 大于       | `{<key>:{$gt:<value>}}`  | `db.col.find({"likes":{$gt:50}}).pretty()`  | `where likes > 50`      |
+| 大于或等于 | `{<key>:{$gte:<value>}}` | `db.col.find({"likes":{$gte:50}}).pretty()` | `where likes >= 50`     |
+| 不等于     | `{<key>:{$ne:<value>}}`  | `db.col.find({"likes":{$ne:50}}).pretty()`  | `where likes != 50`     |
+
+### mongoDB AND 条件
+
+```mongodb
+db.collection.find({key1:value1,key2:value2}).pretty()
+```
+
+示例：
+
+```mongodb
+>db.col.find({title:'MongoDB教程',by:'菜鸟教程'}).pretty()
+
+        "_id" : ObjectId("5fb4c0f5861868f75fa09368"),
+        "title" : "MongoDB教程",
+        "description" : "MongoDB是一个Nosql数据库",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "monogdb",
+                "database",
+                "NoSql"
+        ],
+        "likes" : 100
+}
+```
+
+类似于WHERE语句：WHERE by='菜鸟教程' AND title='MongoDB教程'
+
+### MongoDB OR条件
+
+```mongodb
+>db.col.find(
+   {
+      $or: [
+         {key1: value1}, {key2:value2}
+      ]
+   }
+).pretty()
+```
+
+示例：查询键By为菜鸟教程或者title值为MongoDB教程的文档
+
+```mongodb'
+ db.col.find(
+...     {
+...         $or:
+...         [
+...             {
+...                 by:'菜鸟教程'
+...             }
+...             ,
+...             {
+...                 title:'MongoDB教程'
+...             }
+...         ]
+...     }
+... ).pretty()
+
+        "_id" : ObjectId("5fb4c0f5861868f75fa09368"),
+        "title" : "MongoDB教程",
+        "description" : "MongoDB是一个Nosql数据库",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "monogdb",
+                "database",
+                "NoSql"
+        ],
+        "likes" : 100
+}
+```
+
+### AND和OR联合使用
+
+```mongodb
+db.col.find(
+        {
+            likes:{$gt:50},  //AND操作
+            $or://OR
+            [
+                {
+                    'by':'菜鸟教程'
+                }
+                ,
+                {
+                    'title':'MongoDB教程'
+                }
+            ]
+        }
+).pretty()
+```
+
+类似于sql:where likes>50 AND (by='菜鸟教程' OR title='MongoDB教程')
+
+### projection参数指定是否要显示的键
+
+显示：
+
+```mongodb
+db.col.find(
+    {
+        title:'MongoDB教程'
+    }
+    ,
+    {
+        title:1,
+        by:1
+    }
+).pretty()  // inclusion模式 指定返回的键，不返回其他键（1）
+
+
+        "_id" : ObjectId("5fb4c0f5861868f75fa09368"),
+        "title" : "MongoDB教程",
+        "by" : "菜鸟教程"
+}
+```
+
+不显示：
+
+```mongodb
+> db.col.find(
+...     {
+...         likes:{$gt:50}
+...     }
+...     ,
+...     {
+...         title:0,
+...         by:0
+...     }
+... ).pretty()  // exclusion模式 指定不返回的键,返回其他键（0）
+
+        "_id" : ObjectId("5fb4c0f5861868f75fa09368"),
+        "description" : "MongoDB是一个Nosql数据库",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "monogdb",
+                "database",
+                "NoSql"
+        ],
+        "likes" : 100
+```
+
+**主键默认返回，需要主动指定才能隐藏,inclusion模式时可以指定_id为0**
+
+```mongodb
+> db.col.find(
+...     {
+...         title:'MongoDB教程'
+...     }
+...     ,
+...     {
+...         _id:0,
+...         title:1,
+...         by:1
+...     }
+... ).pretty()
+{ "title" : "MongoDB教程", "by" : "菜鸟教程" }
+```
+
+**两种模式不能混用**
+
+```mongodb
+db.col.find(
+    {
+        likes:{$gt:50}
+    }
+    ,
+    {
+        title:0,
+        by:1
+    }
+).pretty()
+//报错
+Error: error: {
+        "ok" : 0,
+        "errmsg" : "Cannot do inclusion on field by in exclusion projection",
+        "code" : 31253,
+        "codeName" : "Location31253"
+```
+
+**不想指定query可以用 {}代替，但是要指定projection参数**
+
+```mongodb
+> db.col.find(
+...     {},
+...     {
+...         _id:0,
+...         title:1
+...     }
+... )
+{ "title" : "MongoDB教程" }
+```
+
+likes大于50小于120查询条件
+
+```mongodb
+> db.col.find(
+...     {
+...         likes:{$gt:50, $lt:120}
+...     },
+...     {
+...         likes:1
+...     }
+... )
+{ "_id" : ObjectId("5fb4c0f5861868f75fa09368"), "likes" : 100 }
+```
+
+## MongoDB条件操作符
+
