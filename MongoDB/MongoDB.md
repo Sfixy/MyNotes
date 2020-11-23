@@ -663,3 +663,451 @@ likes大于50小于120查询条件
 
 ## MongoDB条件操作符
 
+- (>) 大于 - $gt
+
+- (<) 小于 - $lt
+
+- (>=) 大于等于 - $gte
+
+- (<= ) 小于等于 - $lte
+
+- $ne ----------- not equal  !=
+
+  $eq  --------  equal  =
+
+### $gt操作符（大于）
+
+likes大于100
+
+```mongodb
+db.col.find(
+    {
+        likes:{$gt:100}
+    }
+).pretty()
+
+
+        "_id" : ObjectId("5fbb1ed02f3b3d8945cf2c71"),
+        "title" : "PHP教程",
+        "description" : "PHP是一种创建动态交互性站点的强有力的服务器脚本语言",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "php"
+        ],
+        "likes" : 200
+}
+
+        "_id" : ObjectId("5fbb1eee2f3b3d8945cf2c72"),
+        "title" : "Java 教程",
+        "description" : "Java 是由Sun Microsystems公司于1995年5月推出的高级程序设计语言。",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "java"
+        ],
+        "likes" : 150
+}
+```
+
+### $gte操作符
+
+大于等于100的集合
+
+```mongodb
+ db.col.find(
+...     {
+...         likes:{$gte:100}
+...     }
+... ).pretty()
+
+        "_id" : ObjectId("5fbb1ed02f3b3d8945cf2c71"),
+        "title" : "PHP教程",
+        "description" : "PHP是一种创建动态交互性站点的强有力的服务器脚本语言",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "php"
+        ],
+        "likes" : 200
+}
+
+        "_id" : ObjectId("5fbb1eee2f3b3d8945cf2c72"),
+        "title" : "Java 教程",
+        "description" : "Java 是由Sun Microsystems公司于1995年5月推出的高级程序设计语言。",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "java"
+        ],
+        "likes" : 150
+}
+
+        "_id" : ObjectId("5fbb1efc2f3b3d8945cf2c73"),
+        "title" : "MongoDB 教程",
+        "description" : "MongoDB 是一个 Nosql 数据库",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "mongodb"
+        ],
+        "likes" : 100
+}
+```
+
+### $lt小于操作符
+
+小于150的记录
+
+```mongodb
+db.col.find(
+...     {
+...         likes:{$lt:150}
+...     }
+... ).pretty()
+
+        "_id" : ObjectId("5fbb1efc2f3b3d8945cf2c73"),
+        "title" : "MongoDB 教程",
+        "description" : "MongoDB 是一个 Nosql 数据库",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "mongodb"
+        ],
+        "likes" : 100
+}
+```
+
+### $lte小于等于操作符
+
+小于等于150的记录
+
+```mongodb
+db.col.find(
+...     {
+...         likes:{$lte:150}
+...     }
+... ).pretty()
+
+        "_id" : ObjectId("5fbb1eee2f3b3d8945cf2c72"),
+        "title" : "Java 教程",
+        "description" : "Java 是由Sun Microsystems公司于1995年5月推出的高级程序设计语言。",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "java"
+        ],
+        "likes" : 150
+}
+
+        "_id" : ObjectId("5fbb1efc2f3b3d8945cf2c73"),
+        "title" : "MongoDB 教程",
+        "description" : "MongoDB 是一个 Nosql 数据库",
+        "by" : "菜鸟教程",
+        "url" : "http://www.runoob.com",
+        "tags" : [
+                "mongodb"
+        ],
+        "likes" : 100
+}
+```
+
+### gt和lt一起使用
+
+大于100，小于200
+
+```mongodb
+> db.col.find(                                                                
+...     {                                                                     
+...         likes:{$gt:100,$lt:200}                                           
+...     }                                                                     
+... ).pretty()                                                                
+                                                                              
+        "_id" : ObjectId("5fbb1eee2f3b3d8945cf2c72"),                         
+        "title" : "Java 教程",                                                  
+        "description" : "Java 是由Sun Microsystems公司于1995年5月推出的高级程序设计语言。",      
+        "by" : "菜鸟教程",                                                        
+        "url" : "http://www.runoob.com",                                      
+        "tags" : [                                                            
+                "java"                                                        
+        ],                                                                    
+        "likes" : 150                                                         
+}                                                                     
+```
+
+查询 title 包含"教"字的文档：
+
+```
+db.col.find({title:/教/})
+```
+
+查询 title 字段以"教"字开头的文档：
+
+```
+db.col.find({title:/^教/})
+```
+
+查询 titl e字段以"教"字结尾的文档：
+
+```
+db.col.find({title:/教$/})
+```
+
+## MongoDB操作符-$type实例
+
+如果想获取 "col" 集合中 title 为 String 的数据
+
+```mongodb
+> db.col.find({title:{$type:2}})
+{ "_id" : ObjectId("5fbb1ed02f3b3d8945cf2c71"), "title" : "PHP教程", "description" : "PHP是一种创建动态交互性站点
+的强有力的服务器脚本语言", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "php" ], "likes" : 200 }
+
+{ "_id" : ObjectId("5fbb1eee2f3b3d8945cf2c72"), "title" : "Java 教程", "description" : "Java 是由Sun Microsystems
+公司于1995年5月推出的高级程序设计语言。", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "java" ],
+ "likes" : 150 }
+{ "_id" : ObjectId("5fbb1efc2f3b3d8945cf2c73"), "title" : "MongoDB 教程", "description" : "MongoDB 是一个 Nosql 数
+据库", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "mongodb" ], "likes" : 100 }
+
+或
+
+> db.col.find({title:{$type:'string'}})
+{ "_id" : ObjectId("5fbb1ed02f3b3d8945cf2c71"), "title" : "PHP教程", "description" : "PHP是一种创建动态交互性站点
+的强有力的服务器脚本语言", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "php" ], "likes" : 200 }
+
+{ "_id" : ObjectId("5fbb1eee2f3b3d8945cf2c72"), "title" : "Java 教程", "description" : "Java 是由Sun Microsystems
+公司于1995年5月推出的高级程序设计语言。", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "java" ],
+ "likes" : 150 }
+{ "_id" : ObjectId("5fbb1efc2f3b3d8945cf2c73"), "title" : "MongoDB 教程", "description" : "MongoDB 是一个 Nosql 数
+据库", "by" : "菜鸟教程", "url" : "http://www.runoob.com", "tags" : [ "mongodb" ], "likes" : 100 }
+```
+
+## MongoDB Limit与Skip方法
+
+### Limit方法
+
+指定查询数据的数量
+
+语法：
+
+```mongodb
+db.COLLECTION_NAME.find().limit(NUMBER)
+```
+
+查询文档中的两条记录
+
+```mongodb
+> db.col.find({},{title:1,_id:0}).limit(2)
+{ "title" : "PHP教程" }
+{ "title" : "Java 教程" }
+```
+
+**注：没有指定limit参数，默认返回所有记录**
+
+### Skip方法
+
+跳过指定数量的数据
+
+语法：
+
+```
+db.COLLECTION_NAME.find().limit(NUMBER).skip(NUMBER)
+```
+
+跳过第一条记录
+
+```mongodb
+db.col.find({},{"title":1,_id:0}).limit(1).skip(1)
+{ "title" : "Java 教程" }
+```
+
+**注：默认参数是0，一般不使用skip因为效率低下（一条条数数据）**
+
+读取10条数据后的100条数据（跳过前10条，返回后100条）
+
+```
+db.COLLECTION_NAME.find().skip(10).limit(100)
+```
+
+**skip和limit执行顺序和所在位置无关**
+
+```mongodb
+> var arr = [];
+>
+> for(var i=1 ; i<=20000 ; i++){
+...     arr.push({num:i});
+... }
+20000
+>
+> db.numbers.insert(arr);
+BulkWriteResult({
+        "writeErrors" : [ ],
+        "writeConcernErrors" : [ ],
+        "nInserted" : 20000,
+        "nUpserted" : 0,
+        "nMatched" : 0,
+        "nModified" : 0,
+        "nRemoved" : 0,
+        "upserted" : [ ]
+})
+num大于45小于60
+> db.numbers.find({$and:[{"num":{$lt:60}},{"num":{$gt:45}}]}).limit(7).skip(5);
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2ca6"), "num" : 51 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2ca7"), "num" : 52 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2ca8"), "num" : 53 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2ca9"), "num" : 54 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2caa"), "num" : 55 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2cab"), "num" : 56 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2cac"), "num" : 57 }
+
+> db.numbers.find(
+...     {
+...         "num":{$gt:45,$lt:60}
+...     }
+... ).skip(5).limit(7)
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2ca6"), "num" : 51 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2ca7"), "num" : 52 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2ca8"), "num" : 53 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2ca9"), "num" : 54 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2caa"), "num" : 55 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2cab"), "num" : 56 }
+{ "_id" : ObjectId("5fbb2b862f3b3d8945cf2cac"), "num" : 57 }
+```
+
+## MongoDB排序
+
+### sort方法
+
+在 MongoDB 中使用 sort() 方法对数据进行排序，sort() 方法可以通过参数指定排序的字段，并使用 1 和 -1 来指定排序的方式，其中 1 为升序排列，而 -1 是用于降序排列。
+
+语法：
+
+```mongodb
+db.COLLECTION_NAME.find().sort({KEY:1})
+```
+
+col 集合中的数据按字段 likes 的降序排列：
+
+```mongodb
+> db.col.find({},{title:1,_id:0}).sort({likes:-1})
+{ "title" : "PHP教程" }
+{ "title" : "Java 教程" }
+{ "title" : "MongoDB 教程" }
+```
+
+col 集合中的数据按字段 likes 的升序排列：
+
+```mongodb
+> db.col.find({},{title:1,_id:0}).sort({likes:1})
+{ "title" : "MongoDB 教程" }
+{ "title" : "Java 教程" }
+{ "title" : "PHP教程" }
+```
+
+**skip、limit、sort执行顺序：先 sort(), 然后是 skip()，最后是显示的 limit()**
+
+## MongoDB索引
+
+**索引通常能够极大的提高查询的效率**，如果没有索引，MongoDB在读取数据时必须扫描集合中的每个文件并选取那些符合查询条件的记录。
+
+这种扫描全集合的查询效率是非常低的，特别在处理大量的数据时，查询可以要花费几十秒甚至几分钟，这对网站的性能是非常致命的。
+
+**索引是特殊的数据结构**，索引存储在一个易于遍历读取的数据集合中，索引是对数据库表中一列或多列的值进行排序的一种结构
+
+### createIndex()方法
+
+语法：
+
+```mongodb
+db.collection.createIndex(keys, options)
+```
+
+key创建索引字段，1升序排列，-1降序排列
+
+```mongodb
+> db.col.createIndex({"title":1})
+
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+}
+```
+
+复合索引
+
+```mongodb
+> db.col.createIndex({"title":1,"description":-1})
+
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 2,
+        "numIndexesAfter" : 3,
+        "ok" : 1
+}
+```
+
+查看集合索引
+
+```mongodb
+> db.col.getIndexes()
+
+        {
+                "v" : 2,
+                "key" : {
+                        "_id" : 1
+                },
+                "name" : "_id_"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "title" : 1
+                },
+                "name" : "title_1"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "title" : 1,
+                        "description" : -1
+                },
+                "name" : "title_1_description_-1"
+        }
+]
+```
+
+查看集合索引大小
+
+```mongodb
+> db.col.totalIndexSize()
+77824
+```
+
+删除集合指定索引
+
+```mongodb
+db.col.dropIndex("索引名称")
+```
+
+```mongodb
+> db.col.dropIndex("title_1")
+{ "nIndexesWas" : 3, "ok" : 1 }
+> db.col.getIndexes()
+
+        {
+                "v" : 2,
+                "key" : {
+                        "_id" : 1
+                },
+                "name" : "_id_"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "title" : 1,
+                        "description" : -1
+                },
+                "name" : "title_1_description_-1"
+        }
+]
+```
+
