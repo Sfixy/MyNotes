@@ -1111,3 +1111,71 @@ db.col.dropIndex("索引名称")
 ]
 ```
 
+### MOngoDB聚合
+
+处理数据（平均值，求和）
+
+语法：
+
+```mongodb
+db.COLLECTION_NAME.aggregate(AGGREGATE_OPERATION)
+```
+
+```mongodb
+db.col.aggregate(
+    [{
+        $group:{
+            _id:'by_user',num_tutorial:{$sum:1}
+        }
+    }]
+)
+
+{ "_id" : "runoob.com", "num_tutorial" : 3 }
+```
+
+**聚合表达式**
+
+| 表达式    | 描述                                           | 实例                                                         |
+| :-------- | :--------------------------------------------- | :----------------------------------------------------------- |
+| $sum      | 计算总和。                                     | db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$sum : "$likes"}}}]) |
+| $avg      | 计算平均值                                     | db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$avg : "$likes"}}}]) |
+| $min      | 获取集合中所有文档对应值得最小值。             | db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$min : "$likes"}}}]) |
+| $max      | 获取集合中所有文档对应值得最大值。             | db.mycol.aggregate([{$group : {_id : "$by_user", num_tutorial : {$max : "$likes"}}}]) |
+| $push     | 在结果文档中插入值到一个数组中。               | db.mycol.aggregate([{$group : {_id : "$by_user", url : {$push: "$url"}}}]) |
+| $addToSet | 在结果文档中插入值到一个数组中，但不创建副本。 | db.mycol.aggregate([{$group : {_id : "$by_user", url : {$addToSet : "$url"}}}]) |
+| $first    | 根据资源文档的排序获取第一个文档数据。         | db.mycol.aggregate([{$group : {_id : "$by_user", first_url : {$first : "$url"}}}]) |
+| $last     | 根据资源文档的排序获取最后一个文档数据         | db.mycol.aggregate([{$group : {_id : "$by_user", last_url : {$last : "$url"}}}]) |
+
+**管道：**
+
+一个操作（管道）处理完 一条记录传递给下一个操作（管道）处理
+
+$project示例：查询指定字段，id默认显示，也可以设置0取消id的显示 
+
+```mongodb
+db.col.aggregate(
+...     {
+...         $project:
+...         {
+...             title:1,
+...             by_user:1
+...         }
+...     }
+... )
+{ "_id" : ObjectId("5fc7307f7ae3859efca8f295"), "title" : "MongoDB Overview", "by_user" : "runoob.com" }
+{ "_id" : ObjectId("5fc730c57ae3859efca8f296"), "title" : "NoSQL Overview", "by_user" : "runoob.com" }
+{ "_id" : ObjectId("5fc731137ae3859efca8f297"), "title" : "Neo4j Overview", "by_user" : "runoob.com" }
+{ "_id" : ObjectId("5fc732a97ae3859efca8f298"), "title" : "Neo4j Overview", "by_user" : "neo4j" }
+```
+
+$match示例：比较数字大小，选取指定值。match处理完传递给group处理
+
+```mongodb
+db.col.aggregate(
+...     [
+...         {$match:{score:{$gt:10,$lt:750}}},
+...         {$group:{_id:null,count:{$sum:1}}}
+...     ]
+... )
+```
+
