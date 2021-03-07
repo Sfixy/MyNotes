@@ -14,3 +14,7 @@ for (int x : a) cout << x << ' ';
 ```
 
 r = target-nums[i]，去unordered_map中寻找下标，返回unordered_map[r]和i
+
+## 0002两数相加
+
+![image-20210308064327998](D:\Github\MyNotes\LeetCode\image-20210308064327998.png)
